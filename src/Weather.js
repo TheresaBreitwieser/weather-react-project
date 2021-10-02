@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
+import CurrentTime from "./CurrentTime";
 import "./Weather.css";
 
-export default function Weather () {
+export default function Weather (props) {
   const [city, setCity] = useState("");
-  const [weather, setWeather] = useState({});
+  const [weather, setWeather] = useState({loaded: false});
 
   function displayWeather(response) {
     setWeather({
@@ -12,8 +13,10 @@ export default function Weather () {
       temperature: response.data.main.temp,
       wind: response.data.wind.speed,
       humidity: response.data.main.humidity,
-      icon: `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
-      description: response.data.weather[0].description
+      icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
+      description: response.data.weather[0].description,
+      timestamp: new Date(response.data.dt*1000),
+      loaded: true
     });
   }
 
@@ -27,33 +30,51 @@ export default function Weather () {
   function updateCity(event) {
     setCity(event.target.value);
   }
-
+  if (weather.loaded) {
     return(
-        <div className="container">
-            <form onSubmit={handleSubmit}>
-                <div className="row">
-                    <div className="col-6">
-                        <input type="text" placeholder="Enter City..." onChange={updateCity} className="form-control" />
-                    </div>
-                    <div className="col-6">
-                        <button type="submit" className="btn btn-success col-3">Search</button>
-                        <button type="submit" className="btn btn-primary col-3">Current</button>
-                    </div>
-               </div>
-             </form>
-            <h1>{weather.city}</h1>
-            <div>Monday, 17:02</div>
-            <div>{weather.description}</div>
-            <div className="row">
-                <div className="col-6">
-                    <div>{Math.round(weather.temperature)}°C</div>
-                    <img src={weather.icon} alt={weather.description}/>
-                </div>
-                <div class="col-6">
-                    <div>Precipitation: {weather.humidity}%</div>
-                    <div>Wind: {weather.wind}km/h</div>
-                </div>
-            </div>
-        </div>
+      <div className="Weather">
+          <form onSubmit={handleSubmit}>
+              <div className="row">
+                  <div className="col-6">
+                      <input type="text" placeholder="Enter City..." onChange={updateCity} className="form-control" />
+                  </div>
+                  <div className="col-6">
+                      <button type="submit" className="btn btn-success col-3">Search</button>
+                      <button type="submit" className="btn btn-primary col-3">Current</button>
+                  </div>
+             </div>
+           </form>
+          <h1>{weather.city}</h1>
+          <CurrentTime date={weather.timestamp}/>
+          <div>{weather.description}</div>
+          <div className="row">
+              <div className="col-6">
+                  <img src={weather.icon} alt={weather.description}/>
+                  {Math.round(weather.temperature)}°C
+              </div>
+              <div className="col-6">
+                  <div>Precipitation: {weather.humidity}%</div>
+                  <div>Wind: {weather.wind}km/h</div>
+              </div>
+          </div>
+      </div>
+  );
+  }
+  else {
+    return(
+      <div className="Weather">
+          <form onSubmit={handleSubmit}>
+              <div className="row">
+                  <div className="col-6">
+                      <input type="text" placeholder="Enter City..." onChange={updateCity} className="form-control" />
+                  </div>
+                  <div className="col-6">
+                      <button type="submit" className="btn btn-success col-3">Search</button>
+                      <button type="submit" className="btn btn-primary col-3">Current</button>
+                  </div>
+             </div>
+           </form>
+      </div>
     );
+  }
 }

@@ -8,8 +8,10 @@ function App() {
 
   return (
     <div className="App">
-    <Weather />
-    <footer className="footer">Coded by Theresa Breitwieser, open-sourced on <a href="https://github.com/TheresaBreitwieser/weather-react-project" target="_blank" rel="noreferrer">Github</a></footer>
+      <div className="container">
+        <Weather defaultCity="Vienna"/>
+        <footer className="footer">Coded by Theresa Breitwieser, open-sourced on <a href="https://github.com/TheresaBreitwieser/weather-react-project" target="_blank" rel="noreferrer">Github</a></footer>
+      </div>
     </div>
   );
 }
