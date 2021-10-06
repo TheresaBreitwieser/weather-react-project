@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import CurrentTime from "./CurrentTime";
+import WeatherInfo from "./WeatherInfo";
 import "./Weather.css";
 
 export default function Weather (props) {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState(props.defaultCity);
   const [weather, setWeather] = useState({loaded: false});
 
   function displayWeather(response) {
     setWeather({
-      city : response.data.name,
+      city: response.data.name,
       temperature: response.data.main.temp,
       wind: response.data.wind.speed,
       humidity: response.data.main.humidity,
@@ -20,11 +20,15 @@ export default function Weather (props) {
     });
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function search() {
     let apiKey = "094780c710fa4efd669f0df8c3991927";
     let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
     axios.get(apiUrl).then(displayWeather);
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    search();
   }
   
   function updateCity(event) {
@@ -44,37 +48,18 @@ export default function Weather (props) {
                   </div>
              </div>
            </form>
-          <h1>{weather.city}</h1>
-          <CurrentTime date={weather.timestamp}/>
-          <div>{weather.description}</div>
-          <div className="row">
-              <div className="col-6">
-                  <img src={weather.icon} alt={weather.description}/>
-                  {Math.round(weather.temperature)}°C
-              </div>
-              <div className="col-6">
-                  <div>Precipitation: {weather.humidity}%</div>
-                  <div>Wind: {weather.wind}km/h</div>
-              </div>
-          </div>
+           <WeatherInfo data={weather}/>
       </div>
   );
   }
   else {
+    search();
     return(
-      <div className="Weather">
-          <form onSubmit={handleSubmit}>
-              <div className="row">
-                  <div className="col-6">
-                      <input type="text" placeholder="Enter City..." onChange={updateCity} className="form-control" />
-                  </div>
-                  <div className="col-6">
-                      <button type="submit" className="btn btn-success col-3">Search</button>
-                      <button type="submit" className="btn btn-primary col-3">Current</button>
-                  </div>
-             </div>
-           </form>
-      </div>
+      <div>Loading</div>
     );
   }
 }
+
+
+//make new component to change icons
+// make new component to handle unit conversion from celsisus to F
