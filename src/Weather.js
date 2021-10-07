@@ -13,7 +13,7 @@ export default function Weather (props) {
       temperature: response.data.main.temp,
       wind: response.data.wind.speed,
       humidity: response.data.main.humidity,
-      icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
+      icon: response.data.weather[0].icon,
       description: response.data.weather[0].description,
       timestamp: new Date(response.data.dt*1000),
       loaded: true
@@ -60,6 +60,3 @@ export default function Weather (props) {
   }
 }
 
-
-//make new component to change icons
-// make new component to handle unit conversion from celsisus to F
